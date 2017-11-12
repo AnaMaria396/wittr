@@ -19,6 +19,19 @@ self.addEventListener('install', function(event) {
 self.addEventListener('activate', function(event) {
   event.waitUntil(
     // TODO: remove the old cache
+    
+    caches.keys().then(function(cacheNames){
+    	return Promise.all(
+    		cacheNames.filter( function(cacheName){ //i am interested in cache 
+    			//that begin with "wittr-", but that are not the static cache
+    			//this is a list of cache that i don't need anymore.
+    			return cacheName.startsWith("wittr-") && cacheName != staticCacheName;
+    		}).map(function(cacheName){
+    			return caches.delete(cacheName);
+    		})
+    	);
+    })
+    
   );
 });
 
